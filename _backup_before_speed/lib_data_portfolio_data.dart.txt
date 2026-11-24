@@ -1,0 +1,214 @@
+import 'package:flutter/material.dart';
+
+/// ✏️ All your content lives here — edit this file only to update the site.
+
+class Project {
+  final String title;
+  final String subtitle;
+  final String description;
+  final List<String> tags;
+  final List<String> images; // files in assets/images/ — first one shows on the card
+  final Alignment imageAlignment; // which part of the image shows on the card
+  final String link;
+  final String linkLabel;
+  final IconData linkIcon;
+  final IconData icon;
+  final Color color;
+  final bool isTeam;
+  final String? demoUrl; // optional video link (YouTube / Drive) → shows "Watch Demo"
+
+  const Project({
+    required this.title,
+    required this.subtitle,
+    required this.description,
+    required this.tags,
+    this.images = const [],
+    this.imageAlignment = Alignment.center,
+    required this.link,
+    this.linkLabel = 'View on GitHub',
+    this.linkIcon = Icons.code_rounded,
+    required this.icon,
+    required this.color,
+    this.isTeam = false,
+    this.demoUrl,
+  });
+}
+
+class SkillGroup {
+  final String title;
+  final IconData icon;
+  final List<String> skills;
+  const SkillGroup(this.title, this.icon, this.skills);
+}
+
+class PortfolioData {
+  PortfolioData._();
+
+  // ---------- Personal info ----------
+  static const name = 'Majd';
+  static const fullName = 'Majd Al-Khodari';
+  static const role = 'Flutter Developer';
+  static const tagline =
+      'I build cross-platform mobile apps with Flutter, GetX, REST APIs and Firebase — '
+      'clean, reusable code with interfaces people enjoy using.';
+  static const location = 'Gaza, Palestine';
+  static const email = 'majdalkhodari1@gmail.com';
+  static const github = 'https://github.com/MAJDELKHODA';
+  static const linkedin = 'https://www.linkedin.com/in/majd-kodary-74767944a';
+  static const whatsapp =
+      'https://wa.me/972567714398?text=Hi%20Majd%2C%20I%20saw%20your%20portfolio%20and%20I%27d%20like%20to%20discuss%20a%20project.';
+  static const cvPath = 'assets/assets/cv/Majd_CV.pdf';
+
+  static const about =
+      'I\'m a Flutter developer who has delivered individual and team projects across e-commerce, '
+      'delivery, event booking and personal finance. I\'m experienced in debugging API and Firebase '
+      'integrations, handling image uploads, managing asynchronous operations and resolving build errors. '
+      'I focus on clean, reusable code and user-friendly interfaces — and I\'m always learning, '
+      'especially about bringing AI features into mobile apps.';
+
+  static const education = [
+    'Graduated 2026 — University College of Applied Sciences (UCAS), Software & Databases',
+    'Bachelor\'s in Programming — in progress',
+  ];
+
+  static const languages = 'Arabic (Native) · English (Intermediate)';
+
+  static const training = [
+    'Flutter & Dart Application Development Training — Ajyal Institution',
+    'Flutter & Dart Application Development Course — 2026',
+    'Flutter & Dart Application Development Course — 2025',
+    'Web Development Course (HTML, CSS, Web Fundamentals) — 2023',
+  ];
+
+  // ---------- Skills ----------
+  static const skills = [
+    SkillGroup('Mobile', Icons.phone_iphone_rounded, [
+      'Flutter',
+      'Dart',
+      'GetX',
+      'Responsive UI',
+      'Reusable Widgets',
+      'Navigation & Routing',
+    ]),
+    SkillGroup('Backend & Data', Icons.cloud_rounded, [
+      'REST APIs',
+      'Firebase',
+      'Cloud Firestore',
+      'JSON',
+      'CRUD',
+      'Async Programming',
+    ]),
+    SkillGroup('Engineering & UX', Icons.auto_awesome_rounded, [
+      'OOP',
+      'Clean Code',
+      'Debugging',
+      'Problem Solving',
+      'UI Design',
+      'User-Centered Design',
+    ]),
+    SkillGroup('Tools & Web', Icons.build_rounded, [
+      'Git',
+      'GitHub',
+      'Android Studio',
+      'HTML',
+      'CSS',
+    ]),
+  ];
+
+  // ---------- Projects ----------
+  static const projects = [
+    Project(
+      title: 'Lahza · لحظة',
+      subtitle: 'Event booking app',
+      description:
+          'Book appointments in seconds: pick a service provider and an available date & time, '
+          'with a live queue, wait times and "best time to visit" insights.',
+      tags: ['Flutter', 'GetX', 'REST API'],
+      images: ['assets/images/lahza.jpg', 'assets/images/lahza_2.jpg'],
+      link: 'https://github.com/MAJDELKHODA/dori_lahza',
+      icon: Icons.celebration_rounded,
+      color: Color(0xFF1F7A8C),
+    ),
+    Project(
+      title: 'MAJD · Fine Jewelry',
+      subtitle: 'Jewelry e-commerce app',
+      description:
+          'A luxury jewelry shopping app — browse collections, product details, cart and checkout, '
+          'with store and product data fetched through API integration.',
+      tags: ['Flutter', 'GetX', 'REST API'],
+      images: ['assets/images/jewelry.jpg'],
+      imageAlignment: Alignment(0, 0.45),
+      link: 'https://github.com/MAJDELKHODA/majdapicourse',
+      icon: Icons.diamond_rounded,
+      color: Color(0xFFB07A4F),
+    ),
+    Project(
+      title: 'Lamha · لمحة',
+      subtitle: 'Multi-vendor delivery app',
+      description:
+          'A platform bringing multiple stores in Gaza together in one app — store listings, delivery '
+          'requests, order tracking and "Lamha Assistant", an AI-powered helper.',
+      tags: ['Flutter', 'REST API', 'AI Assistant'],
+      images: [
+        'assets/images/lamha.jpg',
+        'assets/images/lamha_customer.jpg',
+        'assets/images/lamha_driver.jpg',
+      ],
+      link: 'https://github.com/MAJDELKHODA/lamha_app',
+      demoUrl: 'https://youtu.be/uk-UaAG1rXs',
+      icon: Icons.delivery_dining_rounded,
+      color: Color(0xFFE59A73),
+      isTeam: true,
+    ),
+    Project(
+      title: 'DearNotes',
+      subtitle: 'Daily notes app',
+      description:
+          'Capture your daily thoughts — ideas, plans and little moments with a timeline view, '
+          'saved and synced with Firebase.',
+      tags: ['Flutter', 'Firebase', 'Firestore'],
+      images: ['assets/images/dearnotes.jpg'],
+      imageAlignment: Alignment(0, -0.1),
+      link: github,
+      icon: Icons.edit_note_rounded,
+      color: Color(0xFFB83B6E),
+    ),
+    Project(
+      title: 'Mizani · ميزاني',
+      subtitle: 'Expense & budget tracker',
+      description:
+          'Record expenses, monitor spending and set daily, weekly and monthly budgets — '
+          'with user data stored and synced in Cloud Firestore.',
+      tags: ['Flutter', 'Firebase', 'Firestore'],
+      images: ['assets/images/mizani.jpg'],
+      link: 'https://github.com/MAJDELKHODA/mizani_app',
+      icon: Icons.account_balance_wallet_rounded,
+      color: Color(0xFF3E9B74),
+    ),
+    Project(
+      title: 'Beauty · بيوتي',
+      subtitle: 'Skincare & beauty store',
+      description:
+          'An Arabic skincare and beauty products app with product features powered by API integration.',
+      tags: ['Flutter', 'GetX', 'REST API'],
+      images: ['assets/images/beauty.jpg', 'assets/images/beauty_2.jpg'],
+      link: 'https://drive.google.com/file/d/1n6Szxoa7ED7G5ahzVkKxUNC2XX6rXnCo/view?usp=sharing',
+      linkLabel: 'Watch Demo',
+      linkIcon: Icons.play_circle_rounded,
+      icon: Icons.spa_rounded,
+      color: Color(0xFFD98C9A),
+    ),
+    Project(
+      title: 'Rafiq · رفيق',
+      subtitle: 'Pet health tracker',
+      description:
+          'A caring companion for pet owners — health records, vaccinations, medicine and care reminders, '
+          'daily care tasks and a photo diary for every pet.',
+      tags: ['Flutter', 'Dart'],
+      images: ['assets/images/rafiq.jpg', 'assets/images/rafiq_showcase.jpg'],
+      link: github,
+      icon: Icons.pets_rounded,
+      color: Color(0xFF7FA77A),
+    ),
+  ];
+}

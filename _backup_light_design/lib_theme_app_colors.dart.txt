@@ -1,0 +1,23 @@
+import 'package:flutter/material.dart';
+
+/// Calm but inviting palette: warm cream + soft teal + gentle peach accent.
+class AppColors {
+  AppColors._();
+
+  static const background = Color(0xFFF8F6F2); // warm cream
+  static const surface = Color(0xFFFFFFFF);
+  static const primary = Color(0xFF2E6F6B); // calm teal
+  static const primaryDark = Color(0xFF1F4F4C);
+  static const primaryLight = Color(0xFFE3EFEC);
+  static const accent = Color(0xFFE59A73); // soft peach
+  static const accentLight = Color(0xFFFBEDE5);
+  static const text = Color(0xFF1E2B2F);
+  static const textMuted = Color(0xFF6B7A7E);
+  static const border = Color(0xFFE8E3DB);
+
+  static const heroGradient = LinearGradient(
+    colors: [primary, Color(0xFF4F9A8F)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+}

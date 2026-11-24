@@ -1,0 +1,228 @@
+import 'package:flutter/material.dart';
+
+import '../data/portfolio_data.dart';
+import '../theme/app_colors.dart';
+import '../utils/links.dart';
+import '../widgets/common.dart';
+
+class HeroSection extends StatelessWidget {
+  final VoidCallback onViewWork;
+  const HeroSection({super.key, required this.onViewWork});
+
+  @override
+  Widget build(BuildContext context) {
+    final mobile = isMobile(context);
+
+    final text = Column(
+      crossAxisAlignment: mobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            color: AppColors.primaryLight,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(color: Color(0xFF3DBE7A), shape: BoxShape.circle),
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'Available for freelance work',
+                style: TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.w600, fontSize: 13),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 24),
+        Text(
+          'Hi, I\'m ${PortfolioData.name} 👋',
+          textAlign: mobile ? TextAlign.center : TextAlign.start,
+          style: TextStyle(fontSize: mobile ? 20 : 24, color: AppColors.textMuted, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 10),
+        RichText(
+          textAlign: mobile ? TextAlign.center : TextAlign.start,
+          text: TextSpan(
+            style: TextStyle(
+              fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
+              fontSize: mobile ? 38 : 58,
+              fontWeight: FontWeight.w800,
+              color: AppColors.text,
+              height: 1.1,
+            ),
+            children: const [
+              TextSpan(text: 'Flutter '),
+              TextSpan(text: 'Developer', style: TextStyle(color: AppColors.primary)),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 520),
+          child: Text(
+            PortfolioData.tagline,
+            textAlign: mobile ? TextAlign.center : TextAlign.start,
+            style: const TextStyle(fontSize: 17, color: AppColors.textMuted, height: 1.6),
+          ),
+        ),
+        const SizedBox(height: 34),
+        Wrap(
+          spacing: 14,
+          runSpacing: 14,
+          alignment: mobile ? WrapAlignment.center : WrapAlignment.start,
+          children: [
+            PrimaryButton(text: 'View My Work', icon: Icons.arrow_downward_rounded, onTap: onViewWork),
+            PrimaryButton(
+              text: 'Download CV',
+              icon: Icons.download_rounded,
+              outlined: true,
+              onTap: () => openLink(PortfolioData.cvPath),
+            ),
+          ],
+        ),
+        const SizedBox(height: 40),
+        Wrap(
+          spacing: 30,
+          runSpacing: 16,
+          alignment: mobile ? WrapAlignment.center : WrapAlignment.start,
+          children: [
+            _Stat(value: '${PortfolioData.projects.length}+', label: 'Apps built'),
+            const _Stat(value: 'GetX', label: 'State management'),
+            const _Stat(value: 'API', label: 'REST & Firebase'),
+          ],
+        ),
+      ],
+    );
+
+    final avatar = const _Avatar();
+
+    return SectionContainer(
+      child: FadeIn(
+        child: mobile
+            ? Column(children: [avatar, const SizedBox(height: 40), text])
+            : Row(
+                children: [
+                  Expanded(flex: 6, child: text),
+                  const SizedBox(width: 40),
+                  Expanded(
+                    flex: 4,
+                    child: Center(child: FittedBox(fit: BoxFit.scaleDown, child: avatar)),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+class _Stat extends StatelessWidget {
+  final String value;
+  final String label;
+  const _Stat({required this.value, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppColors.primary)),
+        Text(label, style: const TextStyle(fontSize: 13, color: AppColors.textMuted)),
+      ],
+    );
+  }
+}
+
+class _Avatar extends StatelessWidget {
+  const _Avatar();
+
+  @override
+  Widget build(BuildContext context) {
+    final size = isMobile(context) ? 220.0 : 330.0;
+    return SizedBox(
+      width: size + 40,
+      height: size + 40,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // soft peach blob behind
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: Container(
+              width: size * 0.85,
+              height: size * 0.85,
+              decoration: const BoxDecoration(color: AppColors.accentLight, shape: BoxShape.circle),
+            ),
+          ),
+          Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              gradient: AppColors.heroGradient,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withValues(alpha: 0.25),
+                  blurRadius: 40,
+                  offset: const Offset(0, 20),
+                ),
+              ],
+            ),
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/profile.jpeg',
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Center(
+                  child: Icon(Icons.phone_iphone_rounded, size: size * 0.4, color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 0,
+            top: size * 0.15,
+            child: _FloatingChip(icon: Icons.flutter_dash, text: 'Flutter'),
+          ),
+          Positioned(
+            right: 0,
+            top: size * 0.55,
+            child: _FloatingChip(icon: Icons.bolt_rounded, text: 'Clean Code'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FloatingChip extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  const _FloatingChip({required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 20, offset: const Offset(0, 8)),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 18, color: AppColors.primary),
+          const SizedBox(width: 6),
+          Text(text, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+        ],
+      ),
+    );
+  }
+}

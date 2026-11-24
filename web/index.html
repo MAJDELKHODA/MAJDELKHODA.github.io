@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+
+  <!-- Start connecting early to the servers that host the Flutter engine & fonts -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Majd Al-Khodari — Flutter Developer. Mobile apps built with Flutter, GetX, REST APIs and Firebase.">
+
+  <!-- Link preview (WhatsApp, LinkedIn, Facebook, X) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Majd Al-Khodari | Flutter Developer">
+  <meta property="og:description" content="Mobile apps for Android & iOS built with Flutter, GetX, REST APIs and Firebase. See my work and let's build your next app.">
+  <meta property="og:image" content="https://majdelkhoda.github.io/og-image.jpg?v=2">
+  <meta property="og:image:secure_url" content="https://majdelkhoda.github.io/og-image.jpg?v=2">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://majdelkhoda.github.io/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Majd Al-Khodari | Flutter Developer">
+  <meta name="twitter:description" content="Mobile apps for Android & iOS built with Flutter, GetX, REST APIs and Firebase.">
+  <meta name="twitter:image" content="https://majdelkhoda.github.io/og-image.jpg?v=2">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Majd Portfolio">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Majd Al-Khodari | Flutter Developer</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    html, body { margin: 0; background: #FFFBFA; }
+    #skeleton {
+      position: fixed; inset: 0; z-index: 9999; background: #FFFBFA;
+      font-family: sans-serif; transition: opacity .6s ease;
+      background-image: radial-gradient(circle at 75% 30%, rgba(232,196,196,.45) 0, rgba(232,196,196,0) 35%);
+    }
+    #skeleton.hide { opacity: 0; pointer-events: none; }
+    .sk { background: linear-gradient(90deg,#F6E7E6 25%,#FFF6F5 50%,#F6E7E6 75%);
+          background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 12px; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    .sk-nav { height: 76px; border-bottom: 1px solid #F0DEDD; display: flex;
+              align-items: center; justify-content: space-between; padding: 0 6vw; }
+    .sk-hero { display: flex; align-items: center; justify-content: space-between;
+               gap: 40px; padding: 100px 6vw; max-width: 1140px; margin: auto; }
+    .sk-text { flex: 1; }
+    .sk-arch { width: 300px; height: 380px; border-radius: 150px 150px 20px 20px; flex-shrink: 0;
+               outline: 1px solid rgba(122,46,59,.35); outline-offset: 14px; }
+    .sk-gold { background: linear-gradient(90deg,#C9A3A8 25%,#E8C4C4 50%,#C9A3A8 75%); background-size: 200% 100%;
+               animation: shimmer 1.5s infinite; }
+    @media (max-width: 820px) {
+      .sk-hero { flex-direction: column-reverse; padding: 50px 22px; }
+      .sk-arch { width: 220px; height: 280px; }
+      .sk-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="skeleton">
+    <div class="sk-nav">
+      <div class="sk" style="width:120px;height:40px;border-radius:30px"></div>
+      <div class="sk-links" style="display:flex;gap:22px;align-items:center">
+        <div class="sk" style="width:56px;height:12px"></div>
+        <div class="sk" style="width:56px;height:12px"></div>
+        <div class="sk" style="width:56px;height:12px"></div>
+        <div class="sk" style="width:56px;height:12px"></div>
+        <div class="sk sk-gold" style="width:110px;height:40px;border-radius:30px"></div>
+      </div>
+    </div>
+    <div class="sk-hero">
+      <div class="sk-text">
+        <div class="sk" style="width:230px;height:34px;border-radius:30px"></div>
+        <div class="sk" style="width:120px;height:16px;margin-top:34px"></div>
+        <div class="sk sk-gold" style="width:85%;max-width:520px;height:64px;margin-top:14px"></div>
+        <div class="sk" style="width:60%;max-width:340px;height:30px;margin-top:18px"></div>
+        <div class="sk" style="width:90%;max-width:500px;height:14px;margin-top:26px"></div>
+        <div class="sk" style="width:70%;max-width:400px;height:14px;margin-top:10px"></div>
+        <div style="display:flex;gap:16px;margin-top:38px">
+          <div class="sk sk-gold" style="width:170px;height:54px;border-radius:40px"></div>
+          <div class="sk" style="width:170px;height:54px;border-radius:40px"></div>
+        </div>
+      </div>
+      <div class="sk sk-arch"></div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      var s = document.getElementById('skeleton');
+      s.classList.add('hide');
+      setTimeout(function () { s.remove(); }, 700);
+    });
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

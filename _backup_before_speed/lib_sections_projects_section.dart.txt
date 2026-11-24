@@ -1,0 +1,393 @@
+import 'package:flutter/material.dart';
+
+import '../data/portfolio_data.dart';
+import '../theme/app_colors.dart';
+import '../utils/links.dart';
+import '../widgets/common.dart';
+
+class ProjectsSection extends StatelessWidget {
+  const ProjectsSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SectionContainer(
+      alt: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SectionTitle(label: 'Selected work', title: 'Apps I\'ve crafted'),
+          LayoutBuilder(
+            builder: (context, c) {
+              final cols = c.maxWidth > 980 ? 3 : (c.maxWidth > 600 ? 2 : 1);
+              const gap = 26.0;
+              final w = (c.maxWidth - gap * (cols - 1)) / cols;
+              final projects = PortfolioData.projects;
+              return Wrap(
+                spacing: gap,
+                runSpacing: gap + 6,
+                children: [
+                  for (var i = 0; i < projects.length; i++)
+                    SizedBox(
+                      width: w,
+                      child: Reveal(delayMs: (i % cols) * 140, child: ProjectCard(project: projects[i], index: i)),
+                    ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ProjectCard extends StatefulWidget {
+  final Project project;
+  final int index;
+  const ProjectCard({super.key, required this.project, required this.index});
+
+  @override
+  State<ProjectCard> createState() => _ProjectCardState();
+}
+
+class _ProjectCardState extends State<ProjectCard> {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = widget.project;
+    final hasImages = p.images.isNotEmpty;
+    final number = (widget.index + 1).toString().padLeft(2, '0');
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeOutCubic,
+        transform: Matrix4.translationValues(0, _hover ? -10 : 0, 0),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(26),
+          border: Border.all(color: _hover ? AppColors.gold.withValues(alpha: 0.6) : AppColors.border),
+          boxShadow: [
+            BoxShadow(
+              color: _hover ? AppColors.gold.withValues(alpha: 0.16) : AppColors.shadow,
+              blurRadius: _hover ? 45 : 22,
+              offset: const Offset(0, 18),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(26)),
+              child: SizedBox(
+                height: 240,
+                width: double.infinity,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    AnimatedScale(
+                      scale: _hover ? 1.07 : 1,
+                      duration: const Duration(milliseconds: 600),
+                      curve: Curves.easeOutCubic,
+                      child: hasImages
+                          ? Image.asset(
+                              p.images.first,
+                              fit: BoxFit.cover,
+                              alignment: p.imageAlignment,
+                              errorBuilder: (_, __, ___) => _Placeholder(project: p),
+                            )
+                          : _Placeholder(project: p),
+                    ),
+                    // Soft dark fade at the bottom of the image.
+                    IgnorePointer(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Colors.transparent, AppColors.surface.withValues(alpha: 0.55)],
+                            stops: const [0.6, 1],
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (hasImages)
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => showGallery(context, p),
+                          child: AnimatedOpacity(
+                            opacity: _hover ? 1 : 0,
+                            duration: const Duration(milliseconds: 300),
+                            child: Container(
+                              color: AppColors.background.withValues(alpha: 0.45),
+                              alignment: Alignment.center,
+                              child: const _Pill(icon: Icons.zoom_in_rounded, text: 'View screens'),
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (p.isTeam)
+                      const Positioned(left: 14, top: 14, child: _Pill(icon: Icons.groups_rounded, text: 'Team project')),
+                    if (p.images.length > 1)
+                      Positioned(
+                        right: 14,
+                        bottom: 14,
+                        child: _Pill(icon: Icons.collections_rounded, text: '${p.images.length}'),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(26, 24, 26, 22),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(p.subtitle.toUpperCase(),
+                            style: AppText.body(11, color: AppColors.gold, weight: FontWeight.w600, letterSpacing: 1.8)),
+                      ),
+                      Text(number, style: AppText.display(18, color: AppColors.textMuted.withValues(alpha: 0.5))),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(p.title, style: AppText.display(24)),
+                  const SizedBox(height: 12),
+                  Text(p.description, style: AppText.body(14.2, color: AppColors.textMuted, height: 1.75)),
+                  const SizedBox(height: 18),
+                  Wrap(spacing: 8, runSpacing: 8, children: p.tags.map((t) => Tag(t)).toList()),
+                  const SizedBox(height: 20),
+                  Container(height: 1, color: AppColors.border),
+                  const SizedBox(height: 14),
+                  Wrap(
+                    spacing: 20,
+                    runSpacing: 6,
+                    children: [
+                      _CardLink(icon: p.linkIcon, label: p.linkLabel, onTap: () => openLink(p.link)),
+                      if (p.demoUrl != null)
+                        _CardLink(icon: Icons.play_circle_outline_rounded, label: 'Watch Demo', onTap: () => openLink(p.demoUrl!)),
+                      if (hasImages)
+                        _CardLink(icon: Icons.photo_library_outlined, label: 'Screens', onTap: () => showGallery(context, p)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CardLink extends StatefulWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  const _CardLink({required this.icon, required this.label, required this.onTap});
+
+  @override
+  State<_CardLink> createState() => _CardLinkState();
+}
+
+class _CardLinkState extends State<_CardLink> {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = _hover ? AppColors.goldLight : AppColors.gold;
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(widget.icon, size: 17, color: color),
+              const SizedBox(width: 7),
+              Text(widget.label, style: AppText.body(13.5, color: color, weight: FontWeight.w600, height: 1.2)),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: _hover ? 18 : 0,
+                child: _hover ? Icon(Icons.arrow_forward_rounded, size: 15, color: color) : null,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Pill extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  const _Pill({required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
+      decoration: BoxDecoration(
+        color: AppColors.background.withValues(alpha: 0.82),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.45)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 15, color: AppColors.gold),
+          const SizedBox(width: 6),
+          Text(text, style: AppText.body(12, color: AppColors.text, weight: FontWeight.w500, height: 1.2)),
+        ],
+      ),
+    );
+  }
+}
+
+class _Placeholder extends StatelessWidget {
+  final Project project;
+  const _Placeholder({required this.project});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppColors.surfaceLight, project.color.withValues(alpha: 0.35)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(child: Icon(project.icon, size: 64, color: AppColors.gold)),
+    );
+  }
+}
+
+/// Full-screen viewer: the whole mockup (no cropping), swipe between images.
+void showGallery(BuildContext context, Project p) {
+  showDialog(
+    context: context,
+    barrierColor: const Color(0xEB1E1013),
+    builder: (_) => _GalleryDialog(project: p),
+  );
+}
+
+class _GalleryDialog extends StatefulWidget {
+  final Project project;
+  const _GalleryDialog({required this.project});
+
+  @override
+  State<_GalleryDialog> createState() => _GalleryDialogState();
+}
+
+class _GalleryDialogState extends State<_GalleryDialog> {
+  final _controller = PageController();
+  int _index = 0;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _go(int i) => _controller.animateToPage(i, duration: const Duration(milliseconds: 400), curve: Curves.easeOutCubic);
+
+  @override
+  Widget build(BuildContext context) {
+    final images = widget.project.images;
+    return Dialog.fullscreen(
+      backgroundColor: Colors.transparent,
+      child: Stack(
+        children: [
+          PageView.builder(
+            controller: _controller,
+            itemCount: images.length,
+            onPageChanged: (i) => setState(() => _index = i),
+            itemBuilder: (_, i) => Padding(
+              padding: const EdgeInsets.fromLTRB(16, 80, 16, 56),
+              child: InteractiveViewer(child: Center(child: Image.asset(images[i], fit: BoxFit.contain))),
+            ),
+          ),
+          Positioned(
+            top: 18,
+            left: 24,
+            right: 16,
+            child: Row(
+              children: [
+                Expanded(child: Text(widget.project.title, style: AppText.display(22, color: Colors.white))),
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close_rounded, color: Colors.white, size: 28),
+                ),
+              ],
+            ),
+          ),
+          if (images.length > 1) ...[
+            if (_index > 0)
+              Positioned(
+                left: 12,
+                top: 0,
+                bottom: 0,
+                child: Center(child: _NavArrow(icon: Icons.chevron_left_rounded, onTap: () => _go(_index - 1))),
+              ),
+            if (_index < images.length - 1)
+              Positioned(
+                right: 12,
+                top: 0,
+                bottom: 0,
+                child: Center(child: _NavArrow(icon: Icons.chevron_right_rounded, onTap: () => _go(_index + 1))),
+              ),
+            Positioned(
+              bottom: 22,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  images.length,
+                  (i) => AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: i == _index ? 24 : 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: i == _index ? AppColors.powder : Colors.white24,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _NavArrow extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  const _NavArrow({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surface.withValues(alpha: 0.8),
+      shape: const CircleBorder(side: BorderSide(color: AppColors.border)),
+      child: IconButton(onPressed: onTap, icon: Icon(icon, color: AppColors.gold, size: 30)),
+    );
+  }
+}

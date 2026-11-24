@@ -1,0 +1,70 @@
+import 'package:flutter/material.dart';
+
+import '../data/portfolio_data.dart';
+import '../theme/app_colors.dart';
+import '../widgets/common.dart';
+
+class SkillsSection extends StatelessWidget {
+  const SkillsSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SectionContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SectionTitle(label: 'Skills', title: 'What I work with'),
+          LayoutBuilder(
+            builder: (context, c) {
+              final cols = c.maxWidth > 900 ? 4 : (c.maxWidth > 560 ? 2 : 1);
+              const gap = 20.0;
+              final w = (c.maxWidth - gap * (cols - 1)) / cols;
+              return Wrap(
+                spacing: gap,
+                runSpacing: gap,
+                children: PortfolioData.skills
+                    .map((g) => SizedBox(width: w, child: _SkillCard(group: g)))
+                    .toList(),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SkillCard extends StatelessWidget {
+  final SkillGroup group;
+  const _SkillCard({required this.group});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(color: AppColors.accentLight, borderRadius: BorderRadius.circular(14)),
+            child: Icon(group.icon, color: AppColors.accent),
+          ),
+          const SizedBox(height: 16),
+          Text(group.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 14),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: group.skills.map((s) => Tag(s)).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
