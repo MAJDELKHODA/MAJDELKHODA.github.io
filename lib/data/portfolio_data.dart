@@ -182,6 +182,7 @@ class PortfolioData {
       tags: ['Flutter', 'Firebase', 'Firestore'],
       images: ['assets/img/mizani.webp'],
       link: 'https://github.com/MAJDELKHODA/mizani_app',
+      demoUrl: 'https://youtube.com/shorts/0Ey9Wj3en0g',
       icon: Icons.account_balance_wallet_rounded,
       color: Color(0xFF3E9B74),
     ),
